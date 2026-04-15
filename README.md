@@ -116,3 +116,11 @@ Built on Aster Futures v3 API:
 ## Disclaimer
 
 This software is for educational purposes. Cryptocurrency trading involves substantial risk of loss. Use at your own risk. Always test with small amounts first.
+## 撰稿人 / Author
+
+**撰稿人**：丹尼斯  
+**GitHub**：[@dannisiai](https://github.com/dannisiai)  
+**更新时间**：2026年4月
+
+这是我个人修改和维护的 Aster DEX AI 交易机器人项目。
+欢迎提出 Issue 或建议！
