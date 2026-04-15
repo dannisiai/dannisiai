@@ -1,0 +1,13 @@
+whitelist: []              # if non-empty, ONLY trade these symbols
+blacklist:                 # never trade these symbols
+  - "1000SHIBUSDT"
+  - "1000PEPEUSDT"
+
+category_weights:
+  high_volume: 0.3
+  high_volatility: 0.4
+  funding_rate_anomaly: 0.3
+
+funding_rate:
+  high_threshold: 0.001    # funding rate > 0.1% considered high
+  low_threshold: -0.001

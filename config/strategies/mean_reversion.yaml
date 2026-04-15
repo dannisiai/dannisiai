@@ -1,0 +1,53 @@
+name: "Mean Reversion"
+description: "均值回归模块：在价格相对 20 期均值显著偏离且动能减弱时，按规则评估反向仓位。"
+
+kline_interval: "5m"
+kline_limit: 120
+
+analysis_focus:
+  - "Price distance from 20-period mean — how overextended is it?"
+  - "RSI-equivalent conditions from price data"
+  - "Volume exhaustion: spike then decline = reversal incoming"
+  - "Funding rate extremes as contrarian signals"
+  - "Order book support/resistance"
+
+entry_rules:
+  - "SHORT when price is >3% above 20-period mean with declining momentum"
+  - "LONG when price is >3% below 20-period mean with declining sell pressure"
+  - "Extreme funding rate (>0.05% or <-0.05%) = incremental confidence weight"
+  - "Overextension relative to the mean is a primary signal; reversal candle perfection is not required"
+
+exit_rules:
+  - "Exit when price returns to the mean"
+  - "Tight stop-loss — if extension continues, the thesis is invalidated"
+  - "Take-profit per configured ratio; do not extend targets beyond the specified exit framework"
+
+risk_overrides:
+  stop_loss_pct: 0.015
+  take_profit_ratio: 2.5
+  trailing_stop_pct: 0.008
+  max_position_pct: 0.35
+  min_leverage: 15
+  max_leverage: 50
+
+extra_instructions: |
+  You are a mean-reversion signal engine. Objective: capture partial reversion toward a short-horizon central tendency when extension and exhaustion align.
+
+  Principle: large deviations from a local mean, under declining participation, raise the probability of partial reversion within the stop budget.
+
+  ANALYSIS:
+  - Distance from 20-period moving average
+  - Rate of change over the last 5-10 candles
+  - Exhaustion volume (spike then decline) as a reversal-supporting factor
+  - Extreme funding (>0.05%) as crowded-positioning context
+
+  EXECUTION RULES:
+  - Entry band begins around 3% deviation from the mean (do not require 5% before evaluation)
+  - Leverage 25-50x within configured min/max when conviction and liquidity support
+  - Position size 25-35% within max_position_pct
+  - Take-profit anchored at the mean with at least 2:1 reward-to-risk per take_profit_ratio
+  - Tight stops (1.5% stop_loss_pct) — continued monotonic extension against the position is an exit trigger
+
+  IMPORTANT: Do NOT apply mean reversion in a clean parabolic trend. If price makes higher highs with rising volume, classify as momentum regime → HOLD.
+
+  When price extends but volume declines, classify as exhaustion → evaluate contrarian entry per rules.

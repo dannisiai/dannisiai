@@ -1,0 +1,56 @@
+name: "Breakout"
+description: "突破策略：在关键价位被成交量确认的突破发生时，按顺势方向在风险参数内开仓。"
+
+kline_interval: "5m"
+kline_limit: 120
+
+analysis_focus:
+  - "Identify consolidation zones with decreasing volatility"
+  - "Key resistance and support levels from price action and order book"
+  - "Volume buildup during consolidation, spike on breakout"
+  - "Higher timeframe context: breakout aligned with larger trend"
+  - "Order book walls: large orders at key levels about to break"
+
+entry_rules:
+  - "Enter LONG when price breaks above resistance with volume"
+  - "Enter SHORT when price breaks below support with volume"
+  - "Retests are optional; prioritize confirmed closes with volume when latency is a constraint"
+  - "Time-sensitive: prioritize setups where close and volume confirm in the same evaluation window"
+  - "If the candle closes beyond the level with supportive volume, treat that as the primary confirmation"
+
+exit_rules:
+  - "Stop-loss just inside the broken level"
+  - "First target: 1.5x the consolidation range"
+  - "Trail the remainder with trailing_stop_pct within the configured framework"
+
+risk_overrides:
+  stop_loss_pct: 0.012
+  take_profit_ratio: 3.5
+  trailing_stop_pct: 0.01
+  max_position_pct: 0.40
+  min_leverage: 15
+  max_leverage: 50
+
+extra_instructions: |
+  You are a breakout pattern detection system. Identify volatility compression that precedes directional expansion.
+
+  Principle: volatility compression tends to resolve into directional expansion; signal quality depends on close location and volume.
+
+  ANALYSIS:
+  1. CONSOLIDATION: Identify tight ranges where price coils (e.g., 10+ candles)
+  2. KEY LEVELS: Range high and low as reference breaks
+  3. VOLUME: Declining into consolidation; expansion on the break
+  4. CONFIRMATION: Prefer closes beyond the level, not wick-only excursions
+
+  EXECUTION RULES:
+  - When confirmation is strong, entries may proceed without waiting for a retest
+  - On high-conviction breaks, scale leverage toward 25-50x within max_leverage
+  - Position size in the 25-40% band, bounded by max_position_pct
+  - Place a tight stop just inside the range; invalidation is a defined structural failure
+  - Take-profit horizon: breakouts can extend multiples of the consolidation range (e.g., 3-5x as a planning anchor)
+  - If the initial break is missed, avoid late chasing; wait for the next valid compression-and-release setup
+
+  REJECT (HOLD):
+  - Low-volume breaks (higher false-break probability)
+  - Breaks against the dominant higher-timeframe trend without compensating evidence
+  - Long wicks through the level without a confirming close beyond it

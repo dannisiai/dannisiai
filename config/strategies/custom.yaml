@@ -1,0 +1,37 @@
+name: "Custom Strategy"
+description: "自定义策略模板 - 在此编写你自己的策略规则"
+
+kline_interval: "15m"
+kline_limit: 100
+
+analysis_focus:
+  - "在这里填写你希望 AI 关注的分析要点"
+  - "例如：关注 RSI 超买超卖区域"
+  - "例如：关注大单异动和鲸鱼行为"
+
+entry_rules:
+  - "在这里定义你的入场规则"
+  - "例如：RSI < 30 且价格在支撑位时做多"
+  - "例如：价格突破前高且成交量放大时做多"
+
+exit_rules:
+  - "在这里定义你的出场规则"
+  - "例如：RSI > 70 时止盈"
+  - "例如：跌破入场K线低点时止损"
+
+risk_overrides:
+  # 取消注释并修改以覆盖默认风控参数
+  # stop_loss_pct: 0.02
+  # take_profit_ratio: 2.0
+  # trailing_stop_pct: 0.01
+  # max_position_pct: 0.10
+
+extra_instructions: |
+  在这里编写给 AI 的详细策略指令。
+  AI 会严格按照这里的指令来分析市场数据并生成交易信号。
+  
+  你可以描述:
+  - 具体的技术指标规则
+  - 你的市场观点和偏好
+  - 特殊的风险控制要求
+  - 任何你认为重要的交易逻辑

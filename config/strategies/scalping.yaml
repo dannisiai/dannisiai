@@ -1,0 +1,55 @@
+name: "Scalping"
+description: "短周期系统化执行：利用订单簿短期失衡与微观动量在窄止损/止盈带宽内快速进出。"
+
+kline_interval: "1m"
+kline_limit: 60
+
+analysis_focus:
+  - "Order book imbalance: bid/ask volume ratio"
+  - "Micro price action: last 3-5 candles momentum"
+  - "Spread and liquidity"
+  - "Short-term volume spikes and price reaction"
+  - "Market microstructure: large orders appearing/disappearing"
+
+entry_rules:
+  - "Enter when order book shows strong imbalance (>1.5:1 bid/ask for LONG)"
+  - "Quick momentum trades on volume spikes"
+  - "Only trade top liquid pairs"
+  - "Skip if spread > 0.05%"
+  - "When microstructure and momentum align, execute per latency and spread constraints"
+
+exit_rules:
+  - "Take-profit: 0.3-0.8% move"
+  - "Immediate exit if momentum reverses"
+  - "Never hold more than 5 candles"
+
+risk_overrides:
+  stop_loss_pct: 0.005
+  take_profit_ratio: 1.5
+  trailing_stop_pct: 0.003
+  max_position_pct: 0.30
+  min_leverage: 20
+  max_leverage: 75
+
+extra_instructions: |
+  You are a high-frequency microstructure scalping module. Latency and spread are first-class constraints.
+
+  Principle: many small, edge-defined outcomes with strict risk per trade; expectancy comes from disciplined repetition.
+
+  PRIORITY:
+  1. ORDER BOOK: Primary filter. Persistent bid/ask imbalance supports directional bias.
+     - Bid volume materially greater than ask → LONG bias
+     - Ask volume materially greater than bid → SHORT bias
+  2. MICRO MOMENTUM: Direction and slope over the last 3-5 candles
+  3. VOLUME: Prefer episodes with elevated participation relative to recent baseline
+
+  RULES:
+  - Target 0.3-0.8% moves
+  - Stop-loss aligned with stop_loss_pct (0.5% nominal anchor; hard cap per configuration)
+  - If order book is balanced, default to HOLD
+  - Confidence threshold may be modest (>0.55) given high sample count and small per-trade edge
+  - Leverage 30-75x within max_leverage is consistent with very tight stops when liquidity supports it
+  - Position size 20-30% within max_position_pct
+  - When predefined microstructure triggers align, generate the signal without discretionary over-filtering
+
+  Statistical objective: positive expectancy via win rate and payoff asymmetry under bounded risk per trade.

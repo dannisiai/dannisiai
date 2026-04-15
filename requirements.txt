@@ -1,0 +1,10 @@
+httpx>=0.27
+websockets>=12.0
+eth-account>=0.13
+openai>=1.0
+pyyaml>=6.0
+python-dotenv>=1.0
+numpy>=1.26
+pandas>=2.2
+loguru>=0.7
+tweepy>=4.14

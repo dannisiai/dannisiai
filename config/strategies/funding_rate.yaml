@@ -1,0 +1,54 @@
+name: "Funding Rate Arbitrage"
+description: "资金费率模块：在费率显著偏离中性时，对拥挤方向做系统化反向评估，并结合费率与价格风险预算管理仓位。"
+
+kline_interval: "15m"
+kline_limit: 48
+
+analysis_focus:
+  - "Funding rate magnitude and direction — larger absolute values increase signal salience"
+  - "Funding rate trend: escalation indicates positioning crowding"
+  - "Open interest changes: high OI with extreme funding increases unwind risk"
+  - "Time to next funding: enter 30min-2h before settlement"
+  - "Price exhaustion near funding extremes"
+
+entry_rules:
+  - "SHORT when funding rate > +0.03% (longs paying shorts)"
+  - "LONG when funding rate < -0.03% (shorts paying longs)"
+  - "Higher absolute funding increases confidence; scale size and leverage within risk_overrides"
+  - "Funding > 0.1%: map to the upper portion of allowed leverage and position_pct"
+  - "Enter before funding settlement to accrue the scheduled funding cash flow"
+
+exit_rules:
+  - "Hold through at least one funding settlement"
+  - "Exit when funding normalizes (< 0.01%)"
+  - "If price moves 2%+ against you despite funding, cut it"
+
+risk_overrides:
+  stop_loss_pct: 0.025
+  take_profit_ratio: 2.5
+  trailing_stop_pct: 0.012
+  max_position_pct: 0.35
+  min_leverage: 15
+  max_leverage: 40
+
+extra_instructions: |
+  You are a funding-rate-driven systematic module. Objective: exploit statistically crowded positioning while respecting price risk.
+
+  Principle: when one side of the market is paying a large recurring funding, combine carry with directional bias only within defined risk limits.
+
+  FUNDING ANALYSIS:
+  - Rate > +0.03%: Longs pay shorts → evaluate SHORT; carry plus potential mean reversion
+  - Rate < -0.03%: Shorts pay longs → evaluate LONG
+  - Rate between -0.02% and +0.02%: insufficient edge → HOLD
+  - Rate > 0.1%: use the upper leverage band (25-40x) and upper position band (30-35% of max_position_pct mapping)
+
+  TIMING: Enter 30 minutes to 2 hours before next funding settlement.
+
+  EXECUTION RULES:
+  - Extreme funding alone can justify a signal without a perfect reversal pattern, subject to price/volatility filters
+  - At >0.1% funding, target 25-40x leverage and 30-35% position sizing within caps
+  - At 0.03-0.1% funding, target 15-25x leverage and 20-30% position sizing within caps
+  - Stop-loss at 2.5% — allow room for settlement-period noise
+  - Take-profit when funding normalizes or 2:1 R:R is achieved, whichever occurs first
+
+  EXCEPTION: If a strong exogenous catalyst sustains a trend, funding may remain extreme. In that scenario default to HOLD until crowding and price action realign with the model.

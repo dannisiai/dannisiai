@@ -1,0 +1,50 @@
+name: "Trend Following"
+description: "系统化顺势模块：在明确主趋势方向下，以风险可控的仓位与杠杆参与趋势延续段。"
+
+kline_interval: "5m"
+kline_limit: 120
+
+analysis_focus:
+  - "EMA crossover (EMA9 vs EMA21 vs EMA55) to identify trend"
+  - "Higher highs / higher lows for uptrend, lower highs / lower lows for downtrend"
+  - "Volume confirmation: rising volume in trend direction"
+  - "Pullback entries: enter on pullback to EMA when structure remains intact"
+  - "Momentum acceleration: when trend velocity increases, scale exposure within risk caps"
+
+entry_rules:
+  - "Only enter in the direction of the major trend"
+  - "Shallow retracements are acceptable when trend strength and volume support continuation"
+  - "Rising volume on trend continuation supports scaling toward the upper end of allowed size and leverage"
+  - "When trend classification is unambiguous, confidence may be elevated even on modest pullbacks"
+  - "Execute systematically when trend filters pass; avoid discretionary hesitation beyond the stated rules"
+
+exit_rules:
+  - "Exit when trend structure breaks"
+  - "Use trailing stop to ride the trend"
+  - "Partial take-profit only at major levels, let winners run within risk parameters"
+
+risk_overrides:
+  stop_loss_pct: 0.02
+  take_profit_ratio: 4.0
+  trailing_stop_pct: 0.012
+  max_position_pct: 0.40
+  min_leverage: 15
+  max_leverage: 50
+
+extra_instructions: |
+  You are a systematic trend-following module. Objective: participate in sustained directional moves with risk-managed parameters.
+
+  Principle: persistent directional drift with confirming structure and volume warrants scaled exposure within configured limits.
+
+  Use EMA(9), EMA(21), EMA(55) from the kline data:
+  - Bullish: EMA9 > EMA21 > EMA55, price above all EMAs → evaluate LONG with leverage within min/max range
+  - Bearish: EMA9 < EMA21 < EMA55, price below all EMAs → evaluate SHORT with leverage within min/max range
+  - Ranging: EMAs tangled → HOLD (range must be genuinely flat, not a pre-breakout compression)
+
+  EXECUTION RULES:
+  - In a strong trend, consider entries on pullbacks that do not violate swing structure
+  - When signal strength is high, scale leverage toward 25-50x within max_leverage
+  - Position size in the 25-40% of balance band, capped by max_position_pct
+  - When trend filters are clearly satisfied, produce the signal without unnecessary delay
+  - Use wide take-profits (4:1 ratio per risk_overrides) to capture extended legs
+  - Tight nominal stops (2% stop_loss_pct) reflect the expectation that valid trend entries resolve quickly in direction

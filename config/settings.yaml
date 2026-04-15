@@ -1,0 +1,61 @@
+api:
+  rest_base: "https://fapi.asterdex.com"
+  ws_base: "wss://fstream.asterdex.com"
+  chain_id: 1666
+
+trading:
+  mode: "hedge"
+  default_leverage: 20
+  min_leverage: 10
+  max_leverage: 75
+  order_type: "MARKET"
+  time_in_force: "GTC"
+
+risk:
+  min_position_pct: 0.20        # 20% minimum per trade
+  max_position_pct: 0.50        # 50% max per trade — full send
+  max_total_exposure_pct: 5.0   # 500% exposure — infinite bullets
+  stop_loss_pct: 0.15           # 15% stop loss
+  take_profit_ratio: 3.0
+  partial_tp_pct: 0.50
+  trailing_stop_pct: 0.02
+  daily_loss_limit_pct: 0.0     # NO daily loss limit — infinite ammo from tax
+  max_open_positions: 20
+  max_hold_minutes: 45          # close faster — 45 min max
+  min_profit_pct_to_keep: 0.005 # keep if >0.5% profit
+
+scanner:
+  interval_seconds: 60           # scan every 1 minute
+  min_volume_usdt: 300000        # lower threshold to catch more coins
+  min_price_change_pct: 0.5      # lower bar — trade more
+  top_n_pairs: 15
+  excluded_symbols: []
+
+strategies:
+  enabled:
+    - pump_short
+    - trend_following
+    - breakout
+    - scalping
+    - mean_reversion
+    - funding_rate
+
+ai:
+  model: "claude-sonnet-4-6"
+  analysis_interval_seconds: 60    # analyze every 1 min
+  min_confidence: 0.50             # lower bar — trade more aggressively
+  max_tokens: 1024
+  temperature: 0.5                 # more creative / aggressive
+
+twitter:
+  enabled: true
+  post_on_open: true               # tweet when opening position
+  post_on_close: true              # tweet when closing position
+  post_interval_seconds: 300       # minimum 5 min between tweets
+  persona: "liangxi"               # use Liangxi persona
+
+logging:
+  level: "INFO"
+  file: "logs/trading.log"
+  rotation: "10 MB"
+  retention: "7 days"
